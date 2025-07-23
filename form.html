@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload PDF to Google Drive</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; }
+    #result { margin-top: 20px; display: none; }
+    input[type="file"] { margin-bottom: 10px; }
+    button { margin-left: 5px; }
+  </style>
+</head>
+<body>
+  <h2>Upload PDF to Google Drive</h2>
+  <form id="upload-form">
+    <input type="file" id="file" accept="application/pdf" required>
+    <button type="submit">Upload</button>
+  </form>
+
+  <div id="result">
+    <p>File uploaded. Shareable URL:</p>
+    <input type="text" id="file-url" readonly style="width: 80%;">
+    <button onclick="copyURL()">Copy</button>
+  </div>
+
+  <script>
+    document.getElementById('upload-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const file = document.getElementById('file').files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch('/api', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.url) {
+        document.getElementById('result').style.display = 'block';
+        document.getElementById('file-url').value = data.url;
+      } else {
+        alert(data.error || "Upload failed");
+      }
+    });
+
+    function copyURL() {
+      const input = document.getElementById('file-url');
+      input.select();
+      document.execCommand('copy');
+      alert("Copied!");
+    }
+  </script>
+</body>
+</html>
