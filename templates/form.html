@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload PDF to Google Drive</title>
+  <style>
+    body { font-family: Arial; padding: 40px; }
+    input[type="file"] { margin-bottom: 20px; }
+    .output { margin-top: 20px; }
+    .copy-btn { margin-left: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Upload PDF</h2>
+  <form id="uploadForm">
+    <input type="file" name="file" accept="application/pdf" required>
+    <button type="submit">Upload</button>
+  </form>
+
+  <div class="output" id="output"></div>
+
+  <script>
+    document.getElementById('uploadForm').onsubmit = async function (e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById('output').innerHTML = `
+          <input type="text" id="linkBox" value="${data.url}" readonly style="width: 70%;">
+          <button class="copy-btn" onclick="copyLink()">Copy</button>
+        `;
+      } else {
+        alert(data.error);
+      }
+    };
+
+    function copyLink() {
+      const box = document.getElementById("linkBox");
+      box.select();
+      document.execCommand("copy");
+    }
+  </script>
+</body>
+</html>
