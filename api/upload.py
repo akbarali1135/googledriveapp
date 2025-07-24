@@ -16,7 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/api/upload")
+@app.post("/")
 async def upload_to_drive(file: UploadFile = File(...)):
     try:
         content = await file.read()
