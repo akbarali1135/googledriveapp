@@ -28,10 +28,11 @@ async def upload_to_drive(file: UploadFile = File(...)):
             "private_key": os.getenv("GDRIVE_PRIVATE_KEY").replace("\\n", "\n"),
             "client_email": os.getenv("GDRIVE_CLIENT_EMAIL"),
             "client_id": os.getenv("GDRIVE_CLIENT_ID"),
-            "auth_uri": os.getenv("GDRIVE_AUTH_URI"),
-            "token_uri": os.getenv("GDRIVE_TOKEN_URI"),
-            "auth_provider_x509_cert_url": os.getenv("GDRIVE_AUTH_PROVIDER_CERT_URL"),
-            "client_x509_cert_url": os.getenv("GDRIVE_CLIENT_CERT_URL")
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+            "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/fastapi-drive-uploader%40chichas-app.iam.gserviceaccount.com",
+            "universe_domain": "googleapis.com"
         }
 
         credentials = service_account.Credentials.from_service_account_info(credentials_dict)
