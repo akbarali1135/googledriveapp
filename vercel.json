@@ -4,7 +4,7 @@
     { "src": "api/upload.py", "use": "@vercel/python" }
   ],
   "routes": [
-    { "src": "/", "methods": ["POST"], "dest": "api/upload.py" },
+    { "src": "/api/upload", "methods": ["POST"], "dest": "api/upload.py" },
     { "src": "/(.*)", "dest": "/public/index.html" }
   ]
 }
