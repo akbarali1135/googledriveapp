@@ -1,0 +1,47 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Drive Uploader</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    input[type="file"], button { margin-top: 10px; }
+    input[type="text"] { width: 80%; padding: 8px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Upload Bill PDF to Google Drive</h2>
+  <input type="file" id="fileInput" />
+  <br />
+  <button onclick="uploadFile()">Upload</button>
+  <br />
+  <input type="text" id="linkBox" readonly />
+  <button onclick="copyLink()">Copy</button>
+
+  <script>
+    async function uploadFile() {
+      const input = document.getElementById("fileInput");
+      if (!input.files.length) return alert("Please select a file.");
+
+      const formData = new FormData();
+      formData.append("file", input.files[0]);
+
+      const response = await fetch("/api/upload/", {
+        method: "POST",
+        body: formData
+      });
+
+      const result = await response.json();
+      document.getElementById("linkBox").value = result.url;
+    }
+
+    function copyLink() {
+      const box = document.getElementById("linkBox");
+      box.select();
+      document.execCommand("copy");
+      alert("Link copied!");
+    }
+  </script>
+</body>
+</html>
