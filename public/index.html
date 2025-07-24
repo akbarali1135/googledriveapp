@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Upload to Google Drive</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    input[type="file"] { margin: 10px; }
+    #link-box { width: 60%; padding: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Upload File to Google Drive</h1>
+  <input type="file" id="fileInput" />
+  <button onclick="uploadFile()">Upload</button>
+  <br><br>
+  <input type="text" id="link-box" readonly placeholder="Sharable link will appear here" />
+  <button onclick="copyLink()">Copy</button>
+
+  <script>
+    async function uploadFile() {
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
+      if (!file) return alert("Please choose a file first.");
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.link) {
+        document.getElementById("link-box").value = data.link;
+      } else {
+        alert("Upload failed.");
+        console.log(data);
+      }
+    }
+
+    function copyLink() {
+      const input = document.getElementById("link-box");
+      input.select();
+      input.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      alert("Copied the link!");
+    }
+  </script>
+</body>
+</html>
